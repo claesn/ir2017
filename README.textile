@@ -1,0 +1,10 @@
+h1. ir2017
+
+Code für das Seminar "Information Retrieval" (siehe "Seminarplan":http://www.spinfo.phil-fak.uni-koeln.de/spinfo-textengineering.html )
+
+
+h2. package de.uni_koeln.spinfo.textengineering.ir
+
+table(#tableborders){ border: 2px solid #ccc; border-collapse: collapse; border-spacing: 0; width:100%;}.
+| *package* | *Inhalt* | *Ressourcen/Dependencies* | *Literatur* |
+| basic | Korpus, Lineare Suche | "Shakespeare":http://www.gutenberg.org/cache/epub/100/pg100.txt | |

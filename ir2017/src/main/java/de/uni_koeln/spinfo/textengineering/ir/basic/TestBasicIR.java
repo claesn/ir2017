@@ -13,15 +13,22 @@ public class TestBasicIR {
 
 	@BeforeClass
 	public static void setUp() {
-		// Korpus einlesen
+		// Korpus einlesen und in Werke unterteilen:
 		String filename = "pg100.txt";
-		corpus = new Corpus(filename);
+		String delimiter = "1[56][0-9]{2}\n";
+		corpus = new Corpus(filename, delimiter);
 	}
 
 	@Test
 	public void testCorpus() {
-		// Testen, ob Korpus korrekt angelegt wurde
-		assertTrue("Korpus sollte mehr als 1 Werk enthalten", corpus != null);
+		// Testen, ob Korpus korrekt angelegt wurde:
+		List<Work> works = corpus.getWorks();
+		assertTrue("Korpus sollte mehr als 1 Werk enthalten", works.size() >= 1);
+	}
+
+	@Test
+	public void testSearch() throws Exception {
+		// TODO Testen, ob die Suche funktioniert
 	}
 
 }

@@ -52,7 +52,7 @@ public class Corpus {
 			 * Vorkommen des delimiters reicht (= der Titel)
 			 */
 			String title = work.trim().split("\n")[0];
-			works.add(new Work(work, title));
+			works.add(new Work(title, work));
 		}
 	}
 

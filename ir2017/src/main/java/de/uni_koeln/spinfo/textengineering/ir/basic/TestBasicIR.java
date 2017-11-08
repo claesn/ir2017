@@ -3,9 +3,11 @@ package de.uni_koeln.spinfo.textengineering.ir.basic;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.Set;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 
 public class TestBasicIR {
 
@@ -28,8 +30,13 @@ public class TestBasicIR {
 
 	@Test
 	public void testSearch() throws Exception {
-		// TODO Testen, ob die Suche funktioniert
-		// Test
-	}
+		LinearSearch s = new LinearSearch(corpus);
+		Set<Integer> result = s.search("Brutus Caesar");
+		assertTrue("Result sollte nicht leer, ist es aber",result.size() > 0);
+		List<Work> works = corpus.getWorks();
+		for(Integer id : result) {
+			System.out.println(works.get(id).getTitle());
+		}
+		}
 
 }

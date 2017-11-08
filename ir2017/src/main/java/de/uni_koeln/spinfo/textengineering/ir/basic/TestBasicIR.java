@@ -29,6 +29,7 @@ public class TestBasicIR {
 	@Test
 	public void testSearch() throws Exception {
 		// TODO Testen, ob die Suche funktioniert
+		// Test
 	}
 
 }

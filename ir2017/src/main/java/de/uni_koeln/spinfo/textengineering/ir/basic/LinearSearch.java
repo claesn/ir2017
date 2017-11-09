@@ -17,19 +17,22 @@ public class LinearSearch {
 
 		long start = System.currentTimeMillis();
 		Set<Integer> result = new HashSet<>();
+		// Anstelle eines Query-Parsers hier ein einfaches split:
+		String[] queries = query.split("\\P{L}+");
 
-		for (Work work : works) {
-			String text = work.getText();
-			List<String> tokens = Arrays.asList(text.split("\\s+"));
-			for (String t : tokens) {
-				if (t.compareTo(query) == 0) {
-					result.add(works.indexOf(work));
-					break;
+		for (String q : queries) {
+			for (Work work : works) {
+				String text = work.getText();
+				List<String> tokens = Arrays.asList(text.split("\\P{L}+"));
+				for (String t : tokens) {
+					if (t.compareTo(q) == 0) {
+						result.add(works.indexOf(work));
+						break;
+					}
 				}
 			}
 		}
 		System.out.println("Dauer: " + (System.currentTimeMillis() - start) + " ms.");
 		return result;
 	}
-
 }

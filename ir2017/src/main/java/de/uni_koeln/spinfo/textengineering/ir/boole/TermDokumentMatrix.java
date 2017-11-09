@@ -27,7 +27,7 @@ public class TermDokumentMatrix {
 		matrix = new boolean[terms.size()][works.size()];
 
 		for (int spalte = 0; spalte < works.size(); spalte++) {
-			String[] tokens = works.get(spalte).getText().split("\\s+");
+			String[] tokens = works.get(spalte).getText().split("\\P{L}+");
 			for (int j = 0; j < tokens.length; j++) {
 				String t = tokens[j];// das aktuelle Token
 				int zeile = positions.get(t);// Zeilennummer des Tokens
@@ -56,7 +56,7 @@ public class TermDokumentMatrix {
 	private List<String> getTerms(List<Work> works) {
 		Set<String> allTerms = new HashSet<String>();
 		for (Work work : works) {
-			List<String> termsInCurrentWork = Arrays.asList(work.getText().split("\\s+"));
+			List<String> termsInCurrentWork = Arrays.asList(work.getText().split("\\P{L}+"));
 			allTerms.addAll(termsInCurrentWork);
 		}
 		return new ArrayList<String>(allTerms);
@@ -75,15 +75,30 @@ public class TermDokumentMatrix {
 	}
 
 	/*
-	 * TODO Die eigentliche Suche.
+	 * Die eigentliche Suche.
 	 */
 	public Set<Integer> search(String query) {
 
 		long start = System.currentTimeMillis();
 		Set<Integer> result = new HashSet<Integer>();
+		List<String> queries = Arrays.asList(query.split("\\s+"));
 
-		// ... ?
-
+		for (String q : queries) {
+			// erstmal die Zeile ermitteln:
+			Integer zeile = positions.get(q);
+			// ... und dann Spalte für Spalte (Werk für Werk) nachsehen:
+			for (int i = 0; i < matrix[0].length; i++) {
+				// die boolesche Matrix enthält ein 'true' für jeden Treffer:
+				if (matrix[zeile][i]) {
+					result.add(i);
+					/*
+					 * Hier behandeln wir die Suchwörter noch immer als ODER-verknüpft! 
+					 * TODO UND-Verknüpfung?
+					 * 
+					 */
+				}
+			}
+		}
 		System.out.println("Suchdauer: " + (System.currentTimeMillis() - start) + " ms.");
 		return result;
 	}

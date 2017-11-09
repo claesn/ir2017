@@ -45,7 +45,8 @@ public class TestBooleanIR {
 		System.out.println("-------------------");
 
 		TermDokumentMatrix searcher = new TermDokumentMatrix(corpus);
-		query = "Brutus Caesar";
+		
+		query = "Brutus";
 
 		Set<Integer> result = searcher.search(query);
 		assertTrue("Ergebnis sollte nicht leer sein", result.size() > 0);

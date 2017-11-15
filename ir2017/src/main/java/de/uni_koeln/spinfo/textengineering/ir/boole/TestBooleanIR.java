@@ -46,10 +46,14 @@ public class TestBooleanIR {
 
 		TermDokumentMatrix searcher = new TermDokumentMatrix(corpus);
 		
-		query = "Brutus";
+		query = "Brutus Caesar";
 
 		Set<Integer> result = searcher.search(query);
 		assertTrue("Ergebnis sollte nicht leer sein", result.size() > 0);
 		System.out.println("OR-Ergebnis für " + query + ": " + result);
+		
+//		Set<Integer> result2 = ((TermDokumentMatrix) searcher).booleanSearch(query);
+//		assertTrue("Ergebnis sollte kleiner sein als bei normaler Suche", result.size() > result2.size());
+//		System.out.println("AND-Ergebnis für " + query + ": " + result2);
 	}
 }

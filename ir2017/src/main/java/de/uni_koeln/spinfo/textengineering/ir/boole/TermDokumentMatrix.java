@@ -10,9 +10,10 @@ import java.util.Map;
 import java.util.Set;
 
 import de.uni_koeln.spinfo.textengineering.ir.basic.Corpus;
+import de.uni_koeln.spinfo.textengineering.ir.basic.Searcher;
 import de.uni_koeln.spinfo.textengineering.ir.basic.Work;
 
-public class TermDokumentMatrix{
+public class TermDokumentMatrix implements Searcher{
 
 	private boolean[][] matrix;
 	private List<String> terms;
@@ -85,19 +86,25 @@ public class TermDokumentMatrix{
 		List<String> queries = Arrays.asList(query.split("\\s+"));
 
 		for (String q : queries) {
+			Set<Integer> zwischenergebnis = new HashSet<Integer>();
 			// erstmal die Zeilennummer ermitteln:
 			Integer zeilennummer = positions.get(q);
 			// ... und dann Spalte für Spalte (Werk für Werk) nachsehen:
 			for (int i = 0; i < matrix[0].length; i++) {
 				// die boolesche Matrix enthält ein 'true' für jeden Treffer:
 				if (matrix[zeilennummer][i]) {
-					result.add(i);
-					/*
-					 * Hier behandeln wir die Suchwörter noch immer als ODER-verknüpft! 
-					 * TODO UND-Verknüpfung?
-					 * 
-					 */
+					zwischenergebnis.add(i);
 				}
+			}
+			if(result.isEmpty()) {
+				// beim ersten Suchwort entspricht das Ergebnsi dem Zwischenergebnis
+				result = zwischenergebnis;
+			}else {
+				// ab dem zweiten suchwort müssen wir die Teilergebnisse einzeln behandeln... 
+				// Verknüpfung über OR:
+				result.addAll(zwischenergebnis);
+				//... oder AND:
+//				result.retainAll(zwischenergebnis);
 			}
 		}
 		System.out.println("Suchdauer: " + (System.currentTimeMillis() - start) + " ms.");

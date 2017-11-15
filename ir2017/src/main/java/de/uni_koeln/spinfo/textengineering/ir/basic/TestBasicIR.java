@@ -11,6 +11,7 @@ import org.junit.Test;
 public class TestBasicIR {
 
 	private static Corpus corpus;
+	private LinearSearch s;
 
 	@BeforeClass
 	public static void setUp() {
@@ -29,11 +30,14 @@ public class TestBasicIR {
 
 	@Test
 	public void testSearch() throws Exception {
-		LinearSearch s = new LinearSearch(corpus);
-		Set<Integer> result = s.search("Brutus Caesar");
+		
+		s = new LinearSearch(corpus);
+		String query = "Brutus Caesar";
+		
+		Set<Integer> result = s.search(query);
 		assertTrue("Result sollte nicht leer sein, ist es aber", result.size() > 0);
 		System.out.println(result);
-		
+
 		// Minimale Ergebnisaufbereitung
 		List<Work> works = corpus.getWorks();
 		for (Integer id : result) {

@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class LinearSearch {
+public class LinearSearch implements Searcher {
 
 	private List<Work> works;
 
@@ -13,6 +13,10 @@ public class LinearSearch {
 		works = corpus.getWorks();
 	}
 
+	/* (non-Javadoc)
+	 * @see de.uni_koeln.spinfo.textengineering.ir.basic.Searcher#search(java.lang.String)
+	 */
+	@Override
 	public Set<Integer> search(String query) {
 
 		long start = System.currentTimeMillis();

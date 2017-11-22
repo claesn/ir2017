@@ -64,7 +64,6 @@ public final class Preprocessor {
 				text = text.replace(group, "");
 			}
 		}
-		System.out.println(result);
 		/* den Rest nochmal splitten, leere Strings filtern: */
 		List<String> tokens = Arrays.asList(text.split(delimiter));
 		for (String s : tokens) {
@@ -72,7 +71,6 @@ public final class Preprocessor {
 				result.add(s.trim());
 			}
 		}
-		System.out.println(result);
 		return result;
 	}
 

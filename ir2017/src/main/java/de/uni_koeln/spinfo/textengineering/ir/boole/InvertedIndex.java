@@ -60,7 +60,7 @@ public class InvertedIndex implements Searcher {
 		//Suchen im Index
 		long start = System.currentTimeMillis();
 		Set<Integer> result = new HashSet<Integer>();
-		List<String> queries = Arrays.asList(query.split("\\s+"));
+		List<String> queries = Arrays.asList(query.split("\\P{L}+"));
 
 		for (String q : queries) {
 			Set<Integer> zwischenergebnis = index.get(q);

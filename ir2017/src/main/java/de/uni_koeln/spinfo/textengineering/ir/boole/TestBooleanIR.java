@@ -47,7 +47,6 @@ public class TestBooleanIR {
 		System.out.println("-------------------");
 
 		searcher = new TermDokumentMatrix(corpus);
-		
 		query = "Brutus Caesar";
 
 		Set<Integer> result = searcher.search(query);

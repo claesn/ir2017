@@ -3,8 +3,13 @@ package de.uni_koeln.spinfo.textengineering.ir.preprocess;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.tartarus.snowball.SnowballStemmer;
+import org.tartarus.snowball.ext.englishStemmer;
 
 /*
  * Ein sehr einfacher Preprocessor: splittet und gibt Tokens oder sortierte Types zurück.
@@ -45,7 +50,7 @@ public final class Preprocessor {
 		specialCases.add(COMPOUND_NUMBER);
 		specialCases.add(SIMPLE_NUMBER);
 		specialCases.add(EMAIL);
-		
+
 		// Und der Standardfall: Splitten am Whitespace
 		delimiter = UNICODE_DELIMITER;
 	}
@@ -75,23 +80,28 @@ public final class Preprocessor {
 	}
 
 	/*
-	 * Gibt eine Liste aller Terme zurück (enthält jeden Term nur ein Mal)
+	 * Gibt eine Liste der Terme zurück
 	 */
 	public List<String> getTerms(String text) {
-
-		// TODO
-
-		return null;
+		SortedSet<String> terms = new TreeSet<String>(tokenize(text));
+		return new ArrayList<String>(terms);
 	}
 
 	/*
-	 * Gibt eine Liste der Wortstämme zurück
+	 * TODO Gibt eine Liste der Wortstämme zurück
 	 */
 	public List<String> getStems(String testString) {
 
-		// TODO Stemming
+		List<String> tokens = getTerms(testString);
+		SnowballStemmer stemmer = new englishStemmer();
 
-		return null;
+		List<String> result = new ArrayList<>();
+		for (String string : tokens) {
+			// TODO jedes Token an Stemmer geben, den zurückgegebenen Stamm sammeln...
+			String stem = ""; // TODO wie bekommen wir den Stamm?
+			result.add(stem);
+		}
+		return result;
 	}
 
 }

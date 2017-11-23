@@ -1,5 +1,6 @@
 package de.uni_koeln.spinfo.textengineering.ir.boole;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,7 +34,8 @@ public class InvertedIndex implements Searcher {
 			// ... Text tokenisiert wird ...
 			Work work = works.get(i);
 			List<String> terms = Arrays.asList(work.getText().split("\\P{L}+"));
-			Collections.sort(terms);// (das hier muss nicht unbedingt sein, machen wir nur, um konform zu den Folien zu bleiben...)
+			Collections.sort(terms);// (das hier muss nicht unbedingt sein, machen wir nur, um konform zu den Folien zu
+									// bleiben...)
 			// ... um dann für jeden Term ...
 			for (String t : terms) {
 				// ... die postingsList aus dem Index zu holen.
@@ -57,17 +59,24 @@ public class InvertedIndex implements Searcher {
 
 	@Override
 	public Set<Integer> search(String query) {
-		//Suchen im Index
+		// Suchen im Index
 		long start = System.currentTimeMillis();
 		Set<Integer> result = new HashSet<Integer>();
 		List<String> queries = Arrays.asList(query.split("\\P{L}+"));
 
+		// erstmal für jede Teilquery das Zwischenergebnis sammeln:
+		List<Set<Integer>> postingsLists = new ArrayList<Set<Integer>>();
 		for (String q : queries) {
 			Set<Integer> zwischenergebnis = index.get(q);
-			result = zwischenergebnis;
+			postingsLists.add(zwischenergebnis);
 		}
-		// TODO Teilergebnisse kombinieren (z.B. analog zu TD-Matrix) ...
-
+		// Ergebnis ist die Schnittmenge (Intersection) der ersten Liste...
+		result = postingsLists.get(0);
+		// ... mit allen weiteren:
+		for (Set<Integer> pl : postingsLists) {
+			result.retainAll(pl);// AND-Verknüpfung
+			// result.addAll(pl);// OR-Verknüpfung
+		}
 		System.out.println("Suchdauer: " + (System.currentTimeMillis() - start) + " ms.");
 		return result;
 	}

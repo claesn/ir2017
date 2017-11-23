@@ -3,6 +3,8 @@
  */
 package de.uni_koeln.spinfo.textengineering.ir.preprocess;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
 import org.junit.Test;
@@ -14,7 +16,7 @@ import org.junit.Test;
 public class TestPreprocessing {
 
 	private String testString = 
-			  "Meine Mail: claesn@spinfo.uni-koeln.de "
+			  "Meine Mail: mail@spinfo.uni-koeln.de "
 			+ "Meine Telefonnummer: 0221-4706675" 
 			+ "Kann man auch so schreiben: 470 6675"
 			+ "Meine Raumnummer: 3.014"
@@ -30,10 +32,12 @@ public class TestPreprocessing {
 		List<String> terms = p.getTerms(testString);
 		List<String> stems = p.getStems(testString);
 		
-		// TODO was wären hier gute Assertions ?
-
+		// Assertions, z.B.
+		assertTrue("Mehr Tokens als Terme erwartet!", tokens.size() >= terms.size());
 		System.out.println("tokens:\t"+tokens);
 		System.out.println("terms:\t"+terms);
+		
+		assertTrue("Mehr Terme als Stems erwartet!", terms.size() >= stems.size());
 		System.out.println("stems:\t"+stems);
 	}
 

@@ -20,7 +20,8 @@ public class TestPreprocessing {
 			+ "Meine Telefonnummer: 0221-4706675" 
 			+ "Kann man auch so schreiben: 470 6675"
 			+ "Meine Raumnummer: 3.014"
-			+ "Dort bin ich zwischen 8.30 und 17 Uhr.";
+			+ "Dort bin ich zwischen 8.30 und 17 Uhr."
+			+ "noch einiges an Genitiven und ähnlichen morphologischen Spielchen";
 
 	@Test
 	public void testPreprocessing() {

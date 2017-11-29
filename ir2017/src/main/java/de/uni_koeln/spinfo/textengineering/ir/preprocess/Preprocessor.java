@@ -44,7 +44,7 @@ public final class Preprocessor {
 	/*
 	 * default Konstruktor mit Spezialfällen und Standard-Regex für splits
 	 */
-	Preprocessor() {
+	public Preprocessor() {
 		// Einige Spezialfälle:
 		this.specialCases = new ArrayList<String>();
 		specialCases.add(COMPOUND_NUMBER);
@@ -88,17 +88,19 @@ public final class Preprocessor {
 	}
 
 	/*
-	 * TODO Gibt eine Liste der Wortstämme zurück
+	 * Gibt eine Liste der Wortstämme zurück
 	 */
 	public List<String> getStems(String testString) {
 
-		List<String> tokens = getTerms(testString);
+		List<String> terms = getTerms(testString);
 		SnowballStemmer stemmer = new englishStemmer();
 
 		List<String> result = new ArrayList<>();
-		for (String string : tokens) {
-			// TODO jedes Token an Stemmer geben, den zurückgegebenen Stamm sammeln...
-			String stem = ""; // TODO wie bekommen wir den Stamm?
+		for (String term : terms) {
+			//Benutzung siehe z.B. TestApp.java in der Snowball-API
+			stemmer.setCurrent(term);
+			stemmer.stem();
+			String stem = stemmer.getCurrent();
 			result.add(stem);
 		}
 		return result;

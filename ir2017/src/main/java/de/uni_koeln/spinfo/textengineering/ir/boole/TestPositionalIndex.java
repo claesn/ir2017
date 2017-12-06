@@ -47,7 +47,7 @@ public class TestPositionalIndex {
 		 */
 		query = "Brutus Caesar";
 		Set<Integer> result = searcher.search(query);
-		// assertTrue("Ergebnis sollte nicht leer sein", result.size() > 0);
+		assertTrue("Ergebnis sollte nicht leer sein", result.size() > 0);
 		System.out.println("Ergebnis für " + query + ": " + result);
 		for (Integer id : result) {
 			System.out.println("id: " + id + " - " + corpus.getWorks().get(id));

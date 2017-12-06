@@ -42,9 +42,17 @@ public final class Preprocessor {
 	private String delimiter;
 
 	/*
-	 * default Konstruktor mit Spezialfällen und Standard-Regex für splits
+	 * Default Konstruktor ohne Spezialfälle und mit einfachem Split am Whitespace
 	 */
 	public Preprocessor() {
+		this.specialCases = new ArrayList<String>();
+		delimiter = UNICODE_DELIMITER;
+	}
+
+	/*
+	 * spezieller Konstruktor mit Spezialfällen und parametrisiertem Delimiter für splits
+	 */
+	public Preprocessor(String delimiter) {
 		// Einige Spezialfälle:
 		this.specialCases = new ArrayList<String>();
 		specialCases.add(COMPOUND_NUMBER);
@@ -97,7 +105,7 @@ public final class Preprocessor {
 
 		List<String> result = new ArrayList<>();
 		for (String term : terms) {
-			//Benutzung siehe z.B. TestApp.java in der Snowball-API
+			// Benutzung siehe z.B. TestApp.java in der Snowball-API
 			stemmer.setCurrent(term);
 			stemmer.stem();
 			String stem = stemmer.getCurrent();

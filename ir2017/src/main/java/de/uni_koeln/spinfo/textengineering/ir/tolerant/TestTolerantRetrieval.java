@@ -5,6 +5,8 @@ package de.uni_koeln.spinfo.textengineering.ir.tolerant;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.codec.EncoderException;
@@ -17,6 +19,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import de.uni_koeln.spinfo.textengineering.ir.basic.Corpus;
+import de.uni_koeln.spinfo.textengineering.ir.preprocess.Preprocessor;
 
 /**
  * @author spinfo
@@ -50,7 +53,10 @@ public class TestTolerantRetrieval {
 		int levenshteinDistance = StringUtils.getLevenshteinDistance(s1, s2);
 		System.out.println("Distanz zwischen " + s1 + " und " + s2 + ": " + levenshteinDistance);
 
-		//TODO ähnliche Terme berechnen
+		//ähnliche Terme berechnen
+		List<String> terms = new Preprocessor().getTerms(corpus.getText());
+		List<String> variants = new EditDistance().getVariants(s1, terms);
+		System.out.println(variants);
 	}
 
 	/*
@@ -70,7 +76,11 @@ public class TestTolerantRetrieval {
 		int difference = soundex.difference(s1, s2);
 		System.out.println("Soundex difference zwischen " + s1 + " und " + s2 + ": " + difference);
 		
-		//TODO ähnliche Terme berechnen
+		//ähnliche Terme berechnen
+		List<String> terms = new Preprocessor().getTerms(corpus.getText());
+		List<String> variants = new PhoneticCorrection().getVariants(s1, terms);
+		System.out.println(variants);
+		
 	}
 
 	/*
@@ -100,28 +110,26 @@ public class TestTolerantRetrieval {
 		System.out.println(String.format("colognePhonetic of '%s': '%s'", s2, cp.colognePhonetic(s2)));
 	}
 
-	@Ignore
 	@Test
 	public void testTolerantRetrieval() {
 
 		System.out.println();
 		System.out.println("Tolerant Retrieval:");
 		System.out.println("-------------------");
-
+		
+		TolerantRetrieval ir = new TolerantRetrieval(corpus);
 		Set<Integer> result = null;
 
-		/*
-		 * TODO Testen, ob auch inkorrekte queries ein Ergebnis liefern ...
-		 */
+		query = "brutus";
 
-		query = "bruttus";
-
+		result = ir.searchTolerant(query);
 		assertTrue("Mindestens ein Treffer erwartet", result.size() >= 1);
 		System.out.println("Ergebnis für " + query + ": " + result);
 		System.out.println("-------------------");
 
 		query = "caezar";
 
+		result = ir.searchTolerant(query);
 		assertTrue("Mindestens ein Treffer erwartet", result.size() >= 1);
 		System.out.println("Ergebnis für " + query + ": " + result);
 		System.out.println("-------------------");

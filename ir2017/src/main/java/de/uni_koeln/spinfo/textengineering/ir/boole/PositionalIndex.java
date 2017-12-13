@@ -79,7 +79,9 @@ public class PositionalIndex implements Searcher {
 		List<Set<Integer>> postingsLists = new ArrayList<Set<Integer>>();
 		for (String q : queries) {
 			// Einzige Veränderung ggü der Suche im invertierten Index: Wir nehmen das keySet der Postings-Maps
-			Set<Integer> zwischenergebnis = index.get(q).keySet();
+			Set<Integer> zwischenergebnis = new HashSet<Integer>(index.get(q).keySet());
+			// wir brauchen hier jeweils ein neues Set wg. call by reference (Veränderungen am Set wirken sich auch auf
+			// die Map aus, aus dem wir das Set beziehen)
 			postingsLists.add(zwischenergebnis);
 		}
 		result = postingsLists.get(0);

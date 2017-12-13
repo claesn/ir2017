@@ -13,6 +13,6 @@ public interface StringSimilarity {
 	 * @param terms
 	 * @return eine Liste von Varianten zu String q.
 	 */
-	public List<String> getVariants(String q, Set<String> terms);
+	public List<String> getVariants(String q, List<String> terms);
 
 }

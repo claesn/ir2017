@@ -57,7 +57,7 @@ public class TolerantRetrieval extends InvertedIndex {
 
 		// Wir holen uns zunächst Varianten zur query (abweichend je nach konkreter Implementierung):
 		List<String> variants = sim.getVariants(q, new ArrayList<>(index.keySet()));
-		System.out.println("alle Varianten: " + variants);
+		System.out.println(sim.getClass().getSimpleName()+", Varianten: " + variants);
 		/*
 		 * Und ermitteln dann die 'beste' Variante, indem wir zu jedem Element der Liste eine eigene Suche starten und
 		 * das Element mit der längsten Trefferliste behalten. Hierfür müssen wir die Ergebnisse absteigend sortieren:

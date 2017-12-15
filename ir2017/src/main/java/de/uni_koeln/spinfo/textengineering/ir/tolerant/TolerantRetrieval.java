@@ -1,10 +1,11 @@
 package de.uni_koeln.spinfo.textengineering.ir.tolerant;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import de.uni_koeln.spinfo.textengineering.ir.basic.Corpus;
 import de.uni_koeln.spinfo.textengineering.ir.boole.InvertedIndex;
@@ -16,28 +17,61 @@ public class TolerantRetrieval extends InvertedIndex {
 		super(corpus);
 	}
 
-	public Set<Integer> searchTolerant(String query) {
-		
-		Set<Integer> result = new HashSet<Integer>();
-		List<String> queries = Arrays.asList(query.split("\\P{L}+"));
-
-		System.out.println(queries);
-		// erstmal für jede Teilquery das Zwischenergebnis sammeln:
-		List<Set<Integer>> postingsLists = new ArrayList<Set<Integer>>();
+	/**
+	 * Tolerante Suche: entspricht im Grundaufbau der 'normalen' Suche. Unterschied: wird für eine (Teil-)query kein
+	 * Treffer gefunden, werden Alternativen ermittelt.
+	 * 
+	 * @param query
+	 *            das Suchwort
+	 * @param sim
+	 *            Das Objekt, in dem der Stringvergleich umgesetzt ist (z.B. EditDistance)
+	 * @return Das Ergebnis der unscharfen Suche
+	 * 
+	 */
+	public Set<Integer> searchTolerant(String query, StringSimilarity sim) {
+		List<String> queries = new Preprocessor().getTerms(query);
+		List<Set<Integer>> allPostingsLists = new ArrayList<Set<Integer>>();
 		for (String q : queries) {
-			Set<Integer> zwischenergebnis = super.index.get(q);
-			System.out.println(zwischenergebnis);
-
-			postingsLists.add(zwischenergebnis);
+			Set<Integer> zwischenergebnis = index.get(q);
+			/*
+			 * Im Unterschied zur 'normalen' Suche machen wir hier einen null-Check und ermitteln ggf. Alternativen.
+			 */
+			if (zwischenergebnis == null) {
+				System.out.println("Keine Treffer für Suchwort " + q + ", suche Varianten...");
+				// Wenn kein Ergebnis, dann Varianten holen - und zwar davon die beste
+				String best = getBestVariant(q, sim);
+				System.out.println("Zeige stattdessen Ergebnisse für: " + best);
+				zwischenergebnis = index.get(best);
+			}
+			allPostingsLists.add(zwischenergebnis);
 		}
-		// Ergebnis ist die Schnittmenge (Intersection) der ersten Liste...
-		result = postingsLists.get(0);
-		// ... mit allen weiteren:
-		for (Set<Integer> pl : postingsLists) {
+		Set<Integer> result = allPostingsLists.get(0);
+		for (Set<Integer> pl : allPostingsLists) {
 			result.retainAll(pl);// AND-Verknüpfung
 			// result.addAll(pl);// OR-Verknüpfung
 		}
 		return result;
+	}
+
+	private String getBestVariant(String q, StringSimilarity sim) {
+
+		// Wir holen uns zunächst Varianten zur query (abweichend je nach konkreter Implementierung):
+		List<String> variants = sim.getVariants(q, new ArrayList<>(index.keySet()));
+		System.out.println("alle Varianten: " + variants);
+		/*
+		 * Und ermitteln dann die 'beste' Variante, indem wir zu jedem Element der Liste eine eigene Suche starten und
+		 * das Element mit der längsten Trefferliste behalten. Hierfür müssen wir die Ergebnisse absteigend sortieren:
+		 */
+		Map<Integer, String> map = new TreeMap<>(Collections.reverseOrder());
+		for (String v : variants) {
+			// Wir können hier die 'normale' Suche einsetzen, da wir sicher wissen, dass die Varianten im Index sind:
+			Set<Integer> result = search(v);
+			map.put(result.size(), v);
+		}
+		// das erste Element aus der sortierten Map:
+		String best = map.values().iterator().next();
+		System.out.println("Varianten und Trefferzahl: " + map);
+		return best;
 	}
 
 }

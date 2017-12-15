@@ -1,8 +1,6 @@
 package de.uni_koeln.spinfo.textengineering.ir.boole;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -14,6 +12,7 @@ import java.util.TreeSet;
 import de.uni_koeln.spinfo.textengineering.ir.basic.Corpus;
 import de.uni_koeln.spinfo.textengineering.ir.basic.Searcher;
 import de.uni_koeln.spinfo.textengineering.ir.basic.Work;
+import de.uni_koeln.spinfo.textengineering.ir.preprocess.Preprocessor;
 
 public class InvertedIndex implements Searcher {
 
@@ -33,9 +32,7 @@ public class InvertedIndex implements Searcher {
 		for (int i = 0; i < works.size(); i++) {
 			// ... Text tokenisiert wird ...
 			Work work = works.get(i);
-			List<String> terms = Arrays.asList(work.getText().split("\\P{L}+"));
-			Collections.sort(terms);// (das hier muss nicht unbedingt sein, machen wir nur, um konform zu den Folien zu
-									// bleiben...)
+			List<String> terms = new Preprocessor().tokenize(work.getText());
 			// ... um dann für jeden Term ...
 			for (String t : terms) {
 				// ... die postingsList aus dem Index zu holen.
@@ -54,15 +51,15 @@ public class InvertedIndex implements Searcher {
 				postingsList.add(i);
 			}
 		}
+		System.out.println("Index erstellt, Größe: " + invIndex.size());
 		return invIndex;
 	}
 
 	@Override
 	public Set<Integer> search(String query) {
 		// Suchen im Index
-		long start = System.currentTimeMillis();
 		Set<Integer> result = new HashSet<Integer>();
-		List<String> queries = Arrays.asList(query.split("\\P{L}+"));
+		List<String> queries = new Preprocessor().tokenize(query);
 
 		// erstmal für jede Teilquery das Zwischenergebnis sammeln:
 		List<Set<Integer>> postingsLists = new ArrayList<Set<Integer>>();
@@ -77,7 +74,6 @@ public class InvertedIndex implements Searcher {
 			result.retainAll(pl);// AND-Verknüpfung
 			// result.addAll(pl);// OR-Verknüpfung
 		}
-		System.out.println("Suchdauer: " + (System.currentTimeMillis() - start) + " ms.");
 		return result;
 	}
 

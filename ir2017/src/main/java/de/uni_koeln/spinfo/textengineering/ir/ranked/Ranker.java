@@ -60,7 +60,6 @@ public class Ranker {
 				return s2.compareTo(s1);
 			}
 		});
-
 		// abschließend müssen wir die sortierte Liste wieder in eine Liste von Integer umwandeln:
 		List<Integer> toReturn = new ArrayList<>();
 		for (Work work : toSort) {
@@ -71,8 +70,8 @@ public class Ranker {
 	}
 
 	/**
-	 * Die Cosinus-Ähnlichkeit eines Werks zu einer query. Die eigentliche Ähnlichkeitsberechnung delegieren wir an
-	 * eine Vergleichstrategie, implementiert in der Klasse VectorComparison.
+	 * Die Cosinus-Ähnlichkeit eines Werks zu einer query. Die eigentliche Ähnlichkeitsberechnung delegieren wir an eine
+	 * Vergleichstrategie, implementiert in der Klasse VectorComparison.
 	 * 
 	 * @param query
 	 * @param index
@@ -81,9 +80,30 @@ public class Ranker {
 	 */
 	public Double similarity(Work query, Work document) {
 
-		// TODO: wie erhalten wir die Ähnlichkeit zwischen Query und Dokument?
-		
-		return null;
+		List<Double> queryAsVector = computeVector(query);
+		List<Double> workAsVector = computeVector(document);
+
+		double similarity = VectorComparison.compare(queryAsVector, workAsVector);
+		// optionale Ausgabe:
+		System.out.println("Ähnlichkeit von " + query + " zu " + document + ": " + similarity);
+		return similarity;
+	}
+
+	private List<Double> computeVector(Work work) {
+
+		List<String> terms = index.getTerms();
+		/*
+		 * Ein Vektor für dieses Werk ist eine Liste (Länge = Anzahl Terme insgesamt)
+		 */
+		List<Double> vector = new ArrayList<>(terms.size());
+		Double tfidf;
+		/* ...und dieser Vektor enthält für jeden Term im Vokabular... */
+		for (String t : terms) {
+			/* ...den tfIdf-Wert des Terms (Berechnung in einer eigenen Klasse): */
+			tfidf = TermWeighting.tfIdf(t, work, index);
+			vector.add(tfidf);
+		}
+		return vector;
 	}
 
 }

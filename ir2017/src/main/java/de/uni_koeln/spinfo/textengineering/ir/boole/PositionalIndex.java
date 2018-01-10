@@ -184,4 +184,41 @@ public class PositionalIndex implements Searcher {
 		}
 	}
 
+	/**
+	 * @return Alle Werke im Korpus.
+	 */
+	public List<Work> getWorks() {
+		return corpus.getWorks();
+	}
+
+	/**
+	 * @return Alle Terme im Korpus.
+	 */
+	public List<String> getTerms() {
+		return new ArrayList<String>(index.keySet());
+	}
+
+	/**
+	 * Die Dokumentenfrequenz eines Terms t in diesem Index.
+	 * 
+	 * @param t
+	 * @return die Dokumentenfrequenz
+	 */
+	public double getDf(String t) {
+		return index.get(t).size();
+	}
+
+	/**
+	 * Die Termfrequenz eines Terms t in Bezug auf Werk w. Entspricht der Länge der Liste von Fundstellen (positions)
+	 * des Terms in Werk w.
+	 * 
+	 * @param t
+	 * @param w
+	 * @return die Termfrequenz
+	 */
+	public double getTf(String t, Work w) {
+		int indexOf = getWorks().indexOf(w);// Indexposition des Werks
+		List<Integer> positions = index.get(t).get(indexOf);
+		return positions == null ? 0 : positions.size();
+	}
 }

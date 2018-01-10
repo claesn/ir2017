@@ -5,9 +5,14 @@ public class Work {
 	private String title;
 	private String text;
 
-	public Work(String title, String work) {
+	/**
+	 * Erzeugt ein neues Dokument bestehend aus Titel und Text. 
+	 * @param title
+	 * @param work
+	 */
+	public Work(String title, String text) {
 		this.setTitle(title);
-		this.setText(work);
+		this.setText(text);
 	}
 
 	/**

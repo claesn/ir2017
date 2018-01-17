@@ -85,7 +85,7 @@ public class Ranker {
 
 		double similarity = VectorComparison.compare(queryAsVector, workAsVector);
 		// optionale Ausgabe:
-		System.out.println("Ähnlichkeit von " + query + " zu " + document + ": " + similarity);
+//		System.out.println("Ähnlichkeit von " + query + " zu " + document + ": " + similarity);
 		return similarity;
 	}
 

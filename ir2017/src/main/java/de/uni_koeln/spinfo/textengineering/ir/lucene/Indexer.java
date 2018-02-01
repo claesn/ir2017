@@ -72,9 +72,10 @@ public class Indexer {
 	private Document buildDocument(Work work) {
 
 		Document document = new Document();
-		
-		// TODO: Datenmodell erstellen
-		
+		document.add(new TextField("title", work.getTitle(), Store.YES));
+		document.add(new TextField("text", work.getText(), Store.YES));
+		// StringField wird nicht tokenisiert, gut z.B. für Sortierung
+		document.add(new StringField("title.sort", work.getTitle(), Store.YES));
 		return document;
 	}
 

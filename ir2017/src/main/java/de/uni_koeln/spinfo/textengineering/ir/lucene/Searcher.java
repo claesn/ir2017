@@ -6,13 +6,11 @@ import java.io.IOException;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.SimpleFSDirectory;
@@ -38,12 +36,18 @@ public class Searcher {
 		/*
 		 * B.2: build query - Analog zur Indexierung können wir hier einen Preprocessor nutzen (QueryParser):
 		 */
-		Query query = new TermQuery(new Term("contents",searchPhrase));
-
-		// TODO Eigene Queries vs. QueryParser
-
+		Query query;
 		
-		
+		QueryParser parser = new QueryParser("contents", new StandardAnalyzer());
+		query = parser.parse(searchPhrase);
+		/*
+		 * ... oder uns eine Query selbst bauen (Lucene stellt eine Reihe von versch. Query-Typen bereit):
+		 */
+		// query = new TermQuery(new Term("contents",searchPhrase));
+		// query = new PrefixQuery(new Term("contents",searchPhrase));
+		// query = new FuzzyQuery(new Term("contents",searchPhrase), 1);
+		// ...
+
 		System.out.println("Lucene-Query: " + query);
 		/*
 		 * B.3: Search query - Lucene stellt verschiedene search-Methoden bereit, die in der Regel ein gewichtetes
@@ -65,10 +69,10 @@ public class Searcher {
 		 */
 		for (int i = 0; i < topDocs.scoreDocs.length; i++) {
 			ScoreDoc scoreDoc = topDocs.scoreDocs[i];
+			
 			Document doc = searcher.doc(scoreDoc.doc);
-			
+			System.out.println(doc.getField("title"));
 			// TODO Felder auslesen
-			
 		}
 	}
 
